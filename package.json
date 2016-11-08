@@ -1,0 +1,55 @@
+{
+  "name": "npm-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": {
+    "name": "Maxwell Simmer",
+    "url": "http://maxwellsimmer.com"
+  },
+  "scripts": {
+    "ava": "ava --verbose || true",
+    "lint": "./node_modules/.bin/eslint ./lib/*.jsx || true",
+    "prepublish": "npm run build",
+    "test": "npm run ava && npm run lint",
+    "build": "babel --presets es2015,stage-0 ./lib/index.jsx -o ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "''"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.18.0",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^11.2.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.6.0",
+    "tap-spec": "^4.1.1"
+  },
+  "ava": {
+    "files": [
+      "test.js"
+    ],
+    "source": [
+      "**/*.{js,jsx,es6}"
+    ],
+    "match": [],
+    "concurrency": 5,
+    "failFast": true,
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  }
+}
