@@ -1,5 +1,5 @@
 {
-  "name": "npm-boilerplate",
+  "name": "epub-zipper",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,10 +9,10 @@
   },
   "scripts": {
     "ava": "ava --verbose || true",
-    "lint": "./node_modules/.bin/eslint ./lib/*.jsx || true",
+    "lint": "./node_modules/.bin/eslint ./*.jsx || true",
     "prepublish": "npm run build",
     "test": "npm run ava && npm run lint",
-    "build": "babel --presets es2015,stage-0 ./lib/index.jsx -o ./index.js"
+    "build": "babel --presets es2015,stage-0 ./index.jsx -o ./index.js"
   },
   "repository": {
     "type": "git",
