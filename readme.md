@@ -3,6 +3,14 @@
 
 Zips a directory as an epub.  Includes a wrapper around [EpubCheck 4.0.1](https://github.com/IDPF/epubcheck/releases/tag/v4.0.1).  Returns a promise object.
 
+## Install
+
+```
+$ npm i -S epub-zipper
+```
+
+## Usage
+
 ```js
 import path from 'path'
 import zipper from 'epub-zipper'
