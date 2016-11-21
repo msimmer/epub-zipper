@@ -69,7 +69,7 @@ class Epub {
 
   create({ ...args }) {
     Object.assign(this.options, args)
-    const required = ['input', 'output', 'bookname']
+    const required = ['input', 'output']
     required.forEach((_) => {
       if (!this.options[_] || !{}.hasOwnProperty.call(this.options, _)) {
         throw new Error(`Missing required argument: \`${_}\``)
