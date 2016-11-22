@@ -3,6 +3,18 @@ import path from 'path'
 import { exec } from 'child_process'
 
 class Epub {
+  static report(err, stdout, stderr, reject) {
+    if (err) { reject(err) }
+    if (stderr !== '') { reject(new Error(stderr)) }
+    if (stdout !== '') { console.log(stdout) } // eslint-disable-line no-console
+  }
+
+  static conditionally(test, callback) {
+    return new Promise(resolve/* , reject */ =>  // eslint-disable-line no-confusing-arrow
+      test ? callback.then(resolve) : resolve()
+    )
+  }
+
   constructor() {
     this.options = {
       input: null,
@@ -29,13 +41,6 @@ class Epub {
       `epubs=\`ls -1 ${this._get('output')}/*.epub 2>/dev/null | wc -l\`;`,
       `if [ $epubs != 0 ]; then rm ${this._get('output')}/*.epub; fi`
     ].join(' ')
-
-  }
-
-  report(err, stdout, stderr, reject) {
-    if (err) { reject(err) }
-    if (stderr !== '') { reject(new Error(stderr)) }
-    if (stdout !== '') { console.log(stdout) } // eslint-disable-line no-console
   }
 
   compile() {
@@ -63,16 +68,6 @@ class Epub {
     })
   }
 
-  conditionally(test, callback) {
-    return new Promise((resolve/* , reject */) => {
-      if (test) {
-        return callback.then(resolve)
-      } else {
-        resolve()
-      }
-    })
-  }
-
   create({ ...args }) {
     Object.assign(this.options, args)
     const required = ['input', 'output']
@@ -85,9 +80,9 @@ class Epub {
     this._set('bookname', `${this._get('modified')}.epub`)
     this._set('bookpath', `"${path.resolve(this._get('output'), this._get('bookname'))}"`)
     return new Promise(resolve/* , reject */ =>
-      this.conditionally(this._get('clean'), this.run('remove', this._get('output') ))
-      .then(() => this.run('compile', this._get('input') ))
-      .then(() => this.run('validate', this._get('output') ))
+      this.conditionally(this._get('clean'), this.run('remove', this._get('output')))
+      .then(() => this.run('compile', this._get('input')))
+      .then(() => this.run('validate', this._get('output')))
       .catch(err => console.error(err)) // eslint-disable-line no-console
       .then(resolve)
     )

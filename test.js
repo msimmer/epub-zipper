@@ -8,13 +8,9 @@ test('It conditionally executes a promise callback', t => {
 
   const callback = Promise.resolve(1)
   const conditional = c => {
-    return new Promise((resolve, reject) => {
-      if (c) {
-        return callback.then(resolve)
-      } else {
-        resolve(0)
-      }
-    })
+    return new Promise((resolve/* , reject */) =>
+      c ? callback.then(resolve) : resolve(0)
+    )
   }
 
   const truthy = true
