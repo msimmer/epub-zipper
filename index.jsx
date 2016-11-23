@@ -3,16 +3,24 @@ import path from 'path'
 import { exec } from 'child_process'
 
 class Epub {
-  static report(err, stdout, stderr, reject) {
+  static reporter(err, stdout, stderr, reject) {
     if (err) { reject(err) }
     if (stderr !== '') { reject(new Error(stderr)) }
     if (stdout !== '') { console.log(stdout) } // eslint-disable-line no-console
   }
 
-  static conditionally(test, callback) {
-    return new Promise(resolve/* , reject */ =>  // eslint-disable-line no-confusing-arrow
-      test ? callback.then(resolve) : resolve()
+  static conditional(test, callback) {
+    return new Promise(async resolve/* , reject */ =>  // eslint-disable-line no-confusing-arrow
+      test ? await callback().then(resolve) : resolve()
     )
+  }
+
+  report(err, stdout, stderr, reject) {
+    return this.constructor.reporter(err, stdout, stderr, reject)
+  }
+
+  iff(test, callback) {
+    return this.constructor.conditional(test, callback)
   }
 
   constructor() {
@@ -23,6 +31,7 @@ class Epub {
       bookname: null,
       bookpath: null,
       clean: true,
+      title: null,
       flags: ['-e']
     }
   }
@@ -80,7 +89,7 @@ class Epub {
     this._set('bookname', `${this._get('modified')}.epub`)
     this._set('bookpath', `"${path.resolve(this._get('output'), this._get('bookname'))}"`)
     return new Promise(resolve/* , reject */ =>
-      this.conditionally(this._get('clean'), this.run('remove', this._get('output')))
+      this.iff(this._get('clean'), () => this.run('remove', this._get('output')))
       .then(() => this.run('compile', this._get('input')))
       .then(() => this.run('validate', this._get('output')))
       .catch(err => console.error(err)) // eslint-disable-line no-console
