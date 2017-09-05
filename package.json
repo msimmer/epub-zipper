@@ -9,10 +9,10 @@
   },
   "scripts": {
     "ava": "npm run build && ava --verbose || true",
-    "lint": "./node_modules/.bin/eslint ./*.jsx || true",
+    "lint": "./node_modules/.bin/eslint ./*.es || true",
     "prepublish": "npm run build",
     "test": "npm run ava && npm run lint",
-    "build": "babel --presets es2015,stage-0 ./index.jsx -o ./index.js"
+    "build": "babel --presets es2015,stage-0 ./index.es -o ./index.js"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
       "test.js"
     ],
     "source": [
-      "**/*.{js,jsx,es6}"
+      "**/*.{js,jsx,es6,es}"
     ],
     "match": [],
     "concurrency": 5,

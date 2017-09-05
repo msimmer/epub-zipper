@@ -1,12 +1,14 @@
-
+/* eslint-disable no-console */
 import path from 'path'
 import { exec } from 'child_process'
+
+const EPUBCHECK_VERSION = '4.0.2'
 
 class Epub {
   static reporter(err, stdout, stderr, reject) {
     if (err) { reject(err) }
     if (stderr !== '') { reject(new Error(stderr)) }
-    if (stdout !== '') { console.log(stdout) } // eslint-disable-line no-console
+    if (stdout !== '') { console.log(stdout) }
   }
 
   static conditional(test, callback) {
@@ -91,8 +93,11 @@ class Epub {
     return new Promise(resolve/* , reject */ =>
       this.iff(this._get('clean'), () => this.run('remove', this._get('output')))
       .then(() => this.run('compile', this._get('input')))
-      .then(() => this.run('validate', this._get('output')))
-      .catch(err => console.error(err)) // eslint-disable-line no-console
+      .then(() => {
+        console.log(`Validating against EpubCheck ${EPUBCHECK_VERSION}`)
+        return this.run('validate', this._get('output'))
+      })
+      .catch(err => console.error(err.message))
       .then(resolve)
     )
   }
