@@ -30,8 +30,9 @@ class Epub {
       input: null,
       output: null,
       modified: null,
-      bookname: null,
-      bookpath: null,
+      bookName: null,
+      fileName: null,
+      bookPath: null,
       clean: true,
       title: null,
       flags: ['-e']
@@ -56,9 +57,9 @@ class Epub {
 
   compile() {
     return [
-      `zip -X0 ${this._get('bookpath')} ./mimetype`,
-      `zip -X9Dr ${this._get('bookpath')} ./META-INF -x *.DS_Store`,
-      `zip -X9Dr ${this._get('bookpath')} ./OPS -x *.DS_Store`
+      `zip -X0 ${this._get('bookPath')} ./mimetype`,
+      `zip -X9Dr ${this._get('bookPath')} ./META-INF -x *.DS_Store`,
+      `zip -X9Dr ${this._get('bookPath')} ./OPS -x *.DS_Store`
     ].join(' && ')
   }
 
@@ -66,7 +67,7 @@ class Epub {
     return [
       `java -jar ${path.resolve(__dirname, 'vendor/epubcheck.jar')}`,
       this._get('flags').join(' '),
-      this._get('bookname')
+      this._get('bookName')
     ].join(' ')
   }
 
@@ -87,9 +88,18 @@ class Epub {
         throw new Error(`Missing required argument: \`${_}\``)
       }
     })
-    this._set('modified', new Date().toISOString().replace(/:/g, '-'))
-    this._set('bookname', `${this._get('modified')}.epub`)
-    this._set('bookpath', `"${path.resolve(this._get('output'), this._get('bookname'))}"`)
+
+    const now = new Date().toISOString().replace(/:/g, '-')
+    this._set('modified', now)
+
+    const fileName = this._get('fileName')
+    const bookName = fileName ? `${fileName}.epub` : `${this._get('modified')}.epub`
+    this._set('fileName', fileName)
+    this._set('bookName', bookName)
+
+    const bookPath = `"${path.resolve(this._get('output'), this._get('bookName'))}"`
+    this._set('bookPath', bookPath)
+
     return new Promise(resolve/* , reject */ =>
       this.iff(this._get('clean'), () => this.run('remove', this._get('output')))
       .then(() => this.run('compile', this._get('input')))
