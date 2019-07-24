@@ -13,11 +13,11 @@ Zips a directory as an epub.  Includes a wrapper around [EpubCheck 4.0.2](https:
 $ npm i -S epub-zipper
 ```
 
-## Usage
+## Use
 
 ```js
-import path from 'path'
-import zipper from 'epub-zipper'
+const path = require('path')
+const zipper = require('epub-zipper')
 
 const options = {
   input: path.join(__dirname, './book-dir'),
@@ -25,5 +25,5 @@ const options = {
   clean: true // Removes existing .epubs in the output dir
 }
 
-zipper.create(options).catch(err => console.error(err))
+zipper.create(options).catch(console.error)
 ```
