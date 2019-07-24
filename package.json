@@ -1,6 +1,6 @@
 {
   "name": "epub-zipper",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "Zips a directory as an epub. Returns a promise object.",
   "main": "index.js",
   "engines": {
