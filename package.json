@@ -15,8 +15,7 @@
     "ava": "ava --verbose || true",
     "lint": "eslint ./*.js || true",
     "test": "npm run lint && npm run ava",
-    "prepublishOnly": "npm test",
-    "publish": "npm version patch && npm publish"
+    "publish:patch": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
