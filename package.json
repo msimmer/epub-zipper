@@ -1,6 +1,6 @@
 {
   "name": "epub-zipper",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Zips a directory as an epub. Returns a promise object.",
   "license": "MIT",
   "engines": {
