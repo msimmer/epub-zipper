@@ -29,35 +29,35 @@ class Epub {
     }
   }
 
-  _set(key, val) {
+  set(key, val) {
     this.options[key] = val
     return this[key]
   }
 
-  _get(key) {
+  get(key) {
     return this.options[key]
   }
 
   remove() {
     return [
-      `epubs=\`ls -1 ${this._get('output')}/*.epub 2>/dev/null | wc -l\`;`,
-      `if [ $epubs != 0 ]; then rm ${this._get('output')}/*.epub; fi`,
+      `epubs=\`ls -1 ${this.get('output')}/*.epub 2>/dev/null | wc -l\`;`,
+      `if [ $epubs != 0 ]; then rm ${this.get('output')}/*.epub; fi`,
     ].join(' ')
   }
 
   compile() {
     return [
-      `zip -X0 ${this._get('bookPath')} ./mimetype`,
-      `zip -X9Dr ${this._get('bookPath')} ./META-INF -x *.DS_Store`,
-      `zip -X9Dr ${this._get('bookPath')} ./OPS -x *.DS_Store`,
+      `zip -X0 ${this.get('bookPath')} ./mimetype`,
+      `zip -X9Dr ${this.get('bookPath')} ./META-INF -x *.DS_Store`,
+      `zip -X9Dr ${this.get('bookPath')} ./OPS -x *.DS_Store`,
     ].join(' && ')
   }
 
   validate() {
     return [
       `java -jar ${path.resolve(__dirname, 'vendor/epubcheck.jar')}`,
-      this._get('flags').join(' '),
-      this._get('bookName'),
+      this.get('flags').join(' '),
+      this.get('bookName'),
     ].join(' ')
   }
 
@@ -76,31 +76,32 @@ class Epub {
 
     required.forEach(req => {
       if (!this.options[req] || !{}.hasOwnProperty.call(this.options, req)) {
-        throw new Error(`Missing required argument: \`${req}\``)
+        throw new Error('Missing required argument: `%s`', req)
       }
     })
 
     const now = new Date().toISOString().replace(/:/g, '-')
-    this._set('modified', now)
+    this.set('modified', now)
 
-    const bookName = `${this._get('fileName') || this._get('modified')}.epub`
-    this._set('bookName', bookName)
+    const bookName = `${this.get('fileName') || this.get('modified')}.epub`
+    this.set('bookName', bookName)
 
     const bookPath = `"${path.resolve(
-      this._get('output'),
-      this._get('bookName')
+      this.get('output'),
+      this.get('bookName')
     )}"`
-    this._set('bookPath', bookPath)
 
-    const chain = this._get('clean')
-      ? this.run('remove', this._get('output'))
+    this.set('bookPath', bookPath)
+
+    const chain = this.get('clean')
+      ? this.run('remove', this.get('output'))
       : Promise.resolve()
 
     return chain
-      .then(() => this.run('compile', this._get('input')))
+      .then(() => this.run('compile', this.get('input')))
       .then(() => {
-        console.log(`Validating against EpubCheck ${EPUBCHECK_VERSION}`)
-        return this.run('validate', this._get('output'))
+        console.log('Validating against EpubCheck %s', EPUBCHECK_VERSION)
+        return this.run('validate', this.get('output'))
       })
       .catch(console.error)
   }
