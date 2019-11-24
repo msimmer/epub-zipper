@@ -7,3 +7,4 @@ index.js
 .prettierrc.js
 babel.config.js
 .eslintignore
+vendor
