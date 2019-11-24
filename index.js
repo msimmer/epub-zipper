@@ -1,18 +1,8 @@
 /* eslint-disable no-console */
 const path = require('path')
-const { exec } = require('child_process')
+const { spawn } = require('child_process')
 
 const EPUBCHECK_VERSION = '4.0.2'
-
-function reporter(err, stdout, stderr, reject) {
-  if (err) reject(err)
-  if (stderr !== '') reject(new Error(stderr))
-  if (stdout !== '') console.log(stdout)
-}
-
-function report(err, stdout, stderr, reject) {
-  return reporter(err, stdout, stderr, reject)
-}
 
 class Epub {
   constructor() {
@@ -55,23 +45,36 @@ class Epub {
 
   validate() {
     return [
-      `java -jar ${path.resolve(__dirname, 'vendor/epubcheck.jar')}`,
+      `java -jar ${path.resolve('vendor/epubcheck.jar')}`,
       this.get('flags').join(' '),
       this.get('bookName'),
     ].join(' ')
   }
 
-  run(cmd, dir) {
+  run(cmd, cwd) {
     return new Promise((resolve, reject) => {
-      exec(this[cmd](), { cwd: dir }, (err, stdout, stderr) => {
-        report(err, stdout, stderr, reject)
-        resolve()
+      const proc = spawn(this[cmd](), { cwd, shell: true })
+
+      let internalError = 0
+
+      proc.stdout.on('data', data => process.stdout.write(data.toString()))
+      proc.stderr.on('data', data => {
+        internalError = 1
+        process.stderr.write(data.toString())
+      })
+
+      proc.on('close', code => {
+        if (code === 1) return reject(new Error('Process exited with code 1'))
+        if (internalError === 1) {
+          return reject(new Error('There was an error creating the epub'))
+        }
+        return resolve()
       })
     })
   }
 
   create(args) {
-    Object.assign(this.options, args)
+    this.options = { ...this.options, ...args }
     const required = ['input', 'output']
 
     required.forEach(req => {
@@ -97,13 +100,16 @@ class Epub {
       ? this.run('remove', this.get('output'))
       : Promise.resolve()
 
-    return chain
-      .then(() => this.run('compile', this.get('input')))
-      .then(() => {
-        console.log('Validating against EpubCheck %s', EPUBCHECK_VERSION)
-        return this.run('validate', this.get('output'))
-      })
-      .catch(console.error)
+    return new Promise((resolve, reject) =>
+      chain
+        .then(() => this.run('compile', this.get('input')))
+        .then(() => {
+          console.log('Validating against EPUBCheck %s', EPUBCHECK_VERSION)
+          return this.run('validate', this.get('output'))
+        })
+        .then(resolve)
+        .catch(reject)
+    )
   }
 }
 

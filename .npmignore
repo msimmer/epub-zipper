@@ -1,0 +1,9 @@
+__tests__
+index.js
+.circleci
+.editorconfig
+.eslintrc.js
+.gitattributes
+.prettierrc.js
+babel.config.js
+.eslintignore

@@ -1,5 +1,4 @@
 .DS_Store
 node_modules
-__tests__
-book
 *.epub
+dist
