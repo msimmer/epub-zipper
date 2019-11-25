@@ -45,7 +45,7 @@ class Epub {
 
   validate() {
     return [
-      `java -jar ${path.resolve('vendor/epubcheck.jar')}`,
+      `java -jar ${path.resolve(__dirname, 'vendor/epubcheck.jar')}`,
       this.get('flags').join(' '),
       this.get('bookName'),
     ].join(' ')
