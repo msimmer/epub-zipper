@@ -15,8 +15,10 @@
     "clean": "rimraf dist",
     "build": "npm run clean && babel -d dist index.js && ncp vendor dist/vendor",
     "lint": "eslint \"./**/*.js\" --fix",
-    "prepublish": "npm run build",
-    "preversion": "npm run test",
+    "epubcheck-version": "node scripts/version.js",
+    "is-dirty": "node scripts/is-dirty.js",
+    "prepublish": "npm run epubcheck-version && npm run is-dirty && npm run build",
+    "preversion": "npm run epubcheck-version && npm run is-dirty && npm run test",
     "mocha": "NODE_ENV=test mocha \"./__tests__/index.js\" --timeout 10000",
     "test": "npm run lint && npm run mocha"
   },

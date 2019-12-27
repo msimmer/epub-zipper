@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 const path = require('path')
 const { spawn } = require('child_process')
-
-const EPUBCHECK_VERSION = '4.0.2'
+const epubcheckVersion = require('./epubcheck-version')
 
 class Epub {
   constructor() {
@@ -17,6 +16,8 @@ class Epub {
       title: null,
       flags: ['-e'],
     }
+
+    this.epubcheckPath = path.resolve(__dirname, 'vendor/epubcheck.jar')
   }
 
   set(key, val) {
@@ -45,7 +46,7 @@ class Epub {
 
   validate() {
     return [
-      `java -jar ${path.resolve(__dirname, 'vendor/epubcheck.jar')}`,
+      `java -jar ${this.epubcheckPath}`,
       this.get('flags').join(' '),
       this.get('bookName'),
     ].join(' ')
@@ -104,7 +105,7 @@ class Epub {
       chain
         .then(() => this.run('compile', this.get('input')))
         .then(() => {
-          console.log('Validating against EPUBCheck %s', EPUBCHECK_VERSION)
+          console.log('Validating against EPUBCheck %s', epubcheckVersion)
           return this.run('validate', this.get('output'))
         })
         .then(resolve)
