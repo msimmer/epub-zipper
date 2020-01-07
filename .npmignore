@@ -1,5 +1,6 @@
 __tests__
-index.js
+/index.js
+/epubcheck-version.js
 .circleci
 .editorconfig
 .eslintrc.js
@@ -8,3 +9,4 @@ index.js
 babel.config.js
 .eslintignore
 /vendor
+/scripts

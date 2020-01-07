@@ -1,6 +1,6 @@
 {
   "name": "epub-zipper",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Zips a directory as an epub. Returns a promise object.",
   "license": "MIT",
   "engines": {
@@ -13,7 +13,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && babel -d dist index.js && ncp vendor dist/vendor",
+    "build": "npm run clean && babel -d dist index.js && ncp vendor dist/vendor && ncp epubcheck-version.js dist/epubcheck-version.js",
     "lint": "eslint \"./**/*.js\" --fix",
     "epubcheck-version": "node scripts/version.js",
     "is-dirty": "node scripts/is-dirty.js",

@@ -5,7 +5,7 @@
 [![Code Climate](https://codeclimate.com/github/msimmer/epub-zipper/badges/gpa.svg)](https://codeclimate.com/github/msimmer/epub-zipper)
 [![CircleCI](https://circleci.com/gh/msimmer/epub-zipper.svg?style=svg)](https://circleci.com/gh/msimmer/epub-zipper)
 
-Zips a directory as an epub.  Includes a wrapper around [EpubCheck 4.0.2](https://github.com/IDPF/epubcheck/releases/tag/v4.0.1).  Returns a promise object.
+Zips a directory as an epub.  Includes a wrapper around [EpubCheck](https://github.com/IDPF/epubcheck/).  Returns a promise object.
 
 ## Install
 
